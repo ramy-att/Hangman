@@ -142,7 +142,6 @@ class Game(ttk.Frame):
             self.chances = 0
             self.entered_val.set("")
             get_word()
-            self.character.destroy()
             put_char(self.underscore_list)
             put_image(photos[0])
             print(self.underscore_list)
