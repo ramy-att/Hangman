@@ -1,0 +1,1 @@
+from frames.Cover import Cover, Game, GameOver
