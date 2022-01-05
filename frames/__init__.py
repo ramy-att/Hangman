@@ -1,1 +1,1 @@
-from frames.Cover import Cover, Game, GameOver
+from frames.Cover import Cover, Game

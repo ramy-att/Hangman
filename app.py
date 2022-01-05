@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from frames import Cover, Game, GameOver
+from frames import Cover, Game
 
 #Crispy Text
 try:
@@ -25,12 +25,8 @@ class Hangman(tk.Tk):
         game_frame= Game(self)
         game_frame.grid(row=0, column=0, sticky="NSEW")
 
-        game_over_frame= GameOver(self)
-        game_over_frame.grid(row=0, column=0, sticky="NSEW")
-
         self.frames[Cover]=cover_frame
         self.frames[Game]=game_frame
-        self.frames[GameOver]=game_over_frame
 
         self.show_frame(Cover)
 

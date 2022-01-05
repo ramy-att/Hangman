@@ -84,11 +84,11 @@ class Game(ttk.Frame):
         def put_char(WordList):
             pos = 0
             for char in WordList:
-                character=ttk.Label(
+                self.character=ttk.Label(
                     self.playing_frame,
                     text=str(char)
                 )
-                character.place(rely=0.8,relx=0.2+pos, anchor="center")
+                self.character.place(rely=0.8,relx=0.2+pos, anchor="center")
                 pos+=0.05
 
         def put_image(image_name):
@@ -142,6 +142,7 @@ class Game(ttk.Frame):
             self.chances = 0
             self.entered_val.set("")
             get_word()
+            self.character.destroy()
             put_char(self.underscore_list)
             put_image(photos[0])
             print(self.underscore_list)
