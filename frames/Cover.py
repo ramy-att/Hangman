@@ -163,27 +163,3 @@ class Game(ttk.Frame):
                                     command=reset,
                                   )
         reset_button.grid(padx= 10,pady=10)
-
-class GameOver(ttk.Frame):
-    def __init__(self,parent):
-        super().__init__(parent)
-
-        self.columnconfigure(0, weight=1)
-        self.rowconfigure(0, weight=1)
-        self.game_over_frame = ttk.Frame(self)
-        self.game_over_frame.grid(row=0, column=0, sticky="NSEW")
-
-        photo= "./assets/gameover.png"
-
-        image = Image.open(str(photo))
-        photo = ImageTk.PhotoImage(image)
-
-        img_label = tk.Label(
-            self.game_over_frame,
-            image=photo
-        )
-        img_label.image = photo
-        img_label.place(
-            relx=0.2,
-            rely=0.15,
-        )
