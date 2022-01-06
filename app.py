@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+import tkinter.font as font
 from frames import Cover, Game
 
 #Crispy Text
@@ -34,6 +35,17 @@ class Hangman(tk.Tk):
         frame= self.frames[containter]
         frame.tkraise()
 
+
 app = Hangman()
 app.resizable(False, False)
+
+style= ttk.Style(app)
+font.nametofont("TkDefaultFont").configure(
+    family= "Comic Sans MS",
+    size=12
+)
+
+style.configure(
+    ""
+)
 app.mainloop()

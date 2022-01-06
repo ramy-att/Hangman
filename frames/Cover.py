@@ -89,7 +89,7 @@ class Game(ttk.Frame):
                         self.playing_frame,
                         text=char
                     )
-                    character.place(rely=0.8,relx=0.2+pos, anchor="center")
+                    character.place(rely=0.75,relx=0.2+pos, anchor="center")
                     pos+=0.05
 
             def put_image(image_name):
@@ -141,11 +141,25 @@ class Game(ttk.Frame):
                 open_game()
 
             self.e1 = tk.Entry(self.playing_frame, textvariable=self.entered_val)
-            self.e1.place(rely=0.9, relx=0.5, anchor="center")
+            self.e1.place(rely=0.85, relx=0.5, anchor="center")
+
+            def on_enter(e):
+                submit_button['background'] = 'green'
+
+            def on_leave(e):
+                submit_button['background'] = 'dark green'
+
+            def on_leave_2(e):
+                reset_button['background'] = 'red'
+
+            def on_enter_2(e):
+                reset_button['background'] = 'pale violet red'
+
+
             submit_button = tk.Button(self.playing_frame,
                                 text='Submit',
                                 fg='White',
-                                bg='dark green',
+                                bg='green',
                                 command= submit
                             )
             submit_button.place(rely=0.96, relx=0.5, anchor="center")
@@ -157,4 +171,10 @@ class Game(ttk.Frame):
                                         command=reset,
                                       )
             reset_button.grid(padx= 10,pady=10)
+
+            submit_button.bind("<Enter>", on_enter)
+            submit_button.bind("<Leave>", on_leave)
+            reset_button.bind("<Enter>", on_enter_2)
+            reset_button.bind("<Leave>", on_leave_2)
+
         open_game()
