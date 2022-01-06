@@ -22,7 +22,7 @@ class Hangman(tk.Tk):
         self.rowconfigure(1, weight=1)
 
         self.frames= dict()
-        cover_frame = Cover(self, lambda: self.show_frame(Game))
+        cover_frame = Cover(self)
         cover_frame.grid(row=0, column=0, sticky="NSEW")
 
         game_frame= Game(self)
