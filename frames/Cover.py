@@ -44,6 +44,19 @@ class Cover(ttk.Frame):
             padx=(10,10),
         )
 
+class ColorChangingButton(tk.Button):
+    def __init__(self, master=None, hover_bg=None, *args, **kwargs):
+        super().__init__(master, *args, **kwargs)
+        if hover_bg is not None:
+            self.bg_color = self['background']
+            self.hover_bg = hover_bg
+            self.bind("<Enter>", self.on_enter)
+            self.bind("<Leave>", self.on_leave)
+    def on_enter(self, e):
+        self['background'] = self.hover_bg
+    def on_leave(self, e):
+        e.widget['background'] = self.bg_color
+
 photos=["./assets/1.png","./assets/2.png","./assets/3.png","./assets/4.png","./assets/5.png","./assets/6.png","./assets/7.png","./assets/8.png"]
 class Game(ttk.Frame):
     def __init__(self, parent):
@@ -72,26 +85,23 @@ class Game(ttk.Frame):
             rely=0.15,
         )
 
-        submit_button = tk.Button(self,
-                text='Submit',
-                fg='White',
-                bg='green',
-                command=self.submit
+        submit_button = ColorChangingButton(self,
+            text='Submit',
+            fg='White',
+            bg='green',
+            hover_bg='dark green',
+            command=self.submit
             )
         submit_button.place(rely=0.96, relx=0.5, anchor="center")
 
-        reset_button = tk.Button(self,
+        reset_button = ColorChangingButton(self,
             text='Reset',
             fg='White',
             bg='red',
-            command=self.reset,
-          )
+            hover_bg='pale violet red',
+            command=self.reset_game,
+            )
         reset_button.place(rely=0.1, relx=0.1)
-
-        submit_button.bind("<Enter>", self.on_enter)
-        submit_button.bind("<Leave>", self.on_leave)
-        reset_button.bind("<Enter>", self.on_enter_2)
-        reset_button.bind("<Leave>", self.on_leave_2)
 
         self.characters = tk.StringVar()
         charlbl=ttk.Label(self, textvariable=self.characters)
@@ -147,19 +157,3 @@ class Game(ttk.Frame):
             self.message.set("Siu")
 
         self.e1.delete(0, tk.END)
-
-    def reset(self):
-        self.reset_game()
-
-    def on_enter(self, e):
-        e.widget['background'] = 'green'
-
-    def on_leave(self, e):
-        e.widget['background'] = 'dark green'
-
-    def on_leave_2(self, e):
-        e.widget['background'] = 'red'
-
-    def on_enter_2(self, e):
-        e.widget['background'] = 'pale violet red'
-
