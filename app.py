@@ -44,8 +44,4 @@ font.nametofont("TkDefaultFont").configure(
     family= "Comic Sans MS",
     size=12
 )
-
-style.configure(
-    ""
-)
 app.mainloop()
