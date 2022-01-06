@@ -5,12 +5,12 @@ from tkinter import ttk
 import tkinter.font as font
 from frames import Cover, Game
 
-# ~ #Crispy Text
-# ~ try:
-    # ~ from ctypes import windll
-    # ~ windll.shcore.SetProcessDpiAwareness(1)
-# ~ except:
-    # ~ pass
+#Crispy Text
+try:
+    from ctypes import windll
+    windll.shcore.SetProcessDpiAwareness(1)
+except:
+    print("warning: high DPI not possible")
 
 class Hangman(tk.Tk):
     def __init__(self, *args, **kwargs):

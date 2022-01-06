@@ -51,45 +51,51 @@ class Game(ttk.Frame):
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
 
-        fp = open("./assets/hangman_words.txt")
-        self.lst = fp.readlines()
-        for x in range(len(self.lst)):
-            self.lst[x] = self.lst[x].rstrip('\n').lower()
+        with open("./assets/hangman_words.txt") as fp:
+            self.lst = fp.read().splitlines()
 
         self.entered_val = tk.StringVar()
         self.message=tk.StringVar()
 
-        self.playing_frame= ttk.Frame(self)
-        self.playing_frame.grid(row=0, column=0, sticky="NSEW")
         welcome_label= ttk.Label(
-            self.playing_frame,
+            self,
             textvariable=self.message
         )
         welcome_label.place(relx=0.5, rely=0.1, anchor="center")
 
-        self.e1 = tk.Entry(self.playing_frame, textvariable=self.entered_val)
+        self.e1 = tk.Entry(self, textvariable=self.entered_val)
         self.e1.place(rely=0.85, relx=0.5, anchor="center")
 
-        submit_button = tk.Button(self.playing_frame,
-                            text='Submit',
-                            fg='White',
-                            bg='green',
-                            command=self.submit
-                        )
+        self.img_label = tk.Label(self)
+        self.img_label.place(
+            relx=0.2,
+            rely=0.15,
+        )
+
+        submit_button = tk.Button(self,
+                text='Submit',
+                fg='White',
+                bg='green',
+                command=self.submit
+            )
         submit_button.place(rely=0.96, relx=0.5, anchor="center")
 
-        reset_button = tk.Button(self.playing_frame,
-                                    text='Reset',
-                                    fg='White',
-                                    bg='red',
-                                    command=self.reset,
-                                  )
-        reset_button.grid(padx= 10,pady=10)
+        reset_button = tk.Button(self,
+            text='Reset',
+            fg='White',
+            bg='red',
+            command=self.reset,
+          )
+        reset_button.place(rely=0.1, relx=0.1)
 
         submit_button.bind("<Enter>", self.on_enter)
         submit_button.bind("<Leave>", self.on_leave)
         reset_button.bind("<Enter>", self.on_enter_2)
         reset_button.bind("<Leave>", self.on_leave_2)
+
+        self.characters = tk.StringVar()
+        charlbl=ttk.Label(self, textvariable=self.characters)
+        charlbl.place(rely=0.75,relx=0.5, anchor="center")
 
         self.reset_game()
 
@@ -110,58 +116,40 @@ class Game(ttk.Frame):
         for char in self.word:
             self.underscore_list.append("_")
 
-    def put_char(self, WordList):
-        pos = 0
-        for char in WordList:
-            character=ttk.Label(
-                self.playing_frame,
-                text=char
-            )
-            character.place(rely=0.75,relx=0.2+pos, anchor="center")
-            pos+=0.05
+    def put_char(self, word_list):
+        self.characters.set(" ".join(word_list))
 
     def put_image(self, image_name):
         image = Image.open(str(image_name))
         photo = ImageTk.PhotoImage(image)
-
-        img_label = tk.Label(
-            self.playing_frame,
-            image=photo
-        )
-        img_label.image = photo
-        img_label.place(
-            relx=0.2,
-            rely=0.15,
-        )
+        self.img_label.config(image=photo)
+        self.img_label.image = photo
 
     def submit(self):
-        self.game_started=False
-        if self.entered_val.get() in self.word and self.entered_val.get() not in self.underscore_list:
-            for i in range(len(self.word)):
-                if self.word[i]==self.entered_val.get():
-                    self.underscore_list[i]=self.entered_val.get()
+        entered = self.entered_val.get()
+        # todo: Add check if user entered non-character or more than 1 character
+        if entered in self.word and entered not in self.underscore_list:
+            for i, char in enumerate(self.word):
+                if char == entered:
+                    self.underscore_list[i]=entered
                     self.put_char(self.underscore_list)
                     print(self.underscore_list)
         else:
-            try:
-                self.chances+=1
-                if self.chances==7:
-                    self.game_lost = True
-                    self.message.set("You suck!")
-                    self.put_image(photos[self.chances])
-                    self.put_char(list(self.word))
-                else:
-                    self.put_image(photos[self.chances])
-            except:
-                pass
+            self.chances+=1
+            self.put_image(photos[self.chances])
+
+            if self.chances==7:
+                self.game_lost = True
+                self.message.set("You suck!")
+                self.put_char(list(self.word))
 
         if "_" not in self.underscore_list:
             self.message.set("Siu")
 
-        self.e1.delete(first=0)
+        self.e1.delete(0, tk.END)
 
     def reset(self):
-        reset_game()
+        self.reset_game()
 
     def on_enter(self, e):
         e.widget['background'] = 'green'
