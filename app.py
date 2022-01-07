@@ -1,3 +1,5 @@
+#!/usr/bin/env python3.10
+
 import tkinter as tk
 from tkinter import ttk
 import tkinter.font as font
@@ -8,7 +10,7 @@ try:
     from ctypes import windll
     windll.shcore.SetProcessDpiAwareness(1)
 except:
-    pass
+    print("warning: high DPI not possible")
 
 class Hangman(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -20,7 +22,7 @@ class Hangman(tk.Tk):
         self.rowconfigure(1, weight=1)
 
         self.frames= dict()
-        cover_frame = Cover(self, lambda: self.show_frame(Game))
+        cover_frame = Cover(self)
         cover_frame.grid(row=0, column=0, sticky="NSEW")
 
         game_frame= Game(self)
@@ -35,13 +37,16 @@ class Hangman(tk.Tk):
         frame= self.frames[containter]
         frame.tkraise()
 
+def main():
+    app = Hangman()
+    app.resizable(False, False)
 
-app = Hangman()
-app.resizable(False, False)
+    style= ttk.Style(app)
+    font.nametofont("TkDefaultFont").configure(
+        family= "Comic Sans MS",
+        size=12
+    )
+    app.mainloop()
 
-style= ttk.Style(app)
-font.nametofont("TkDefaultFont").configure(
-    family= "Comic Sans MS",
-    size=12
-)
-app.mainloop()
+if __name__ == '__main__':
+    main()
