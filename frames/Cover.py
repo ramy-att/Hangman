@@ -1,7 +1,9 @@
 import tkinter as tk
+from tkinter import Toplevel
 from tkinter import ttk
 from PIL import Image, ImageTk
 import random
+import time
 
 class Cover(ttk.Frame):
     def __init__(self,parent):
@@ -69,6 +71,7 @@ class Game(ttk.Frame):
 
         self.entered_val = tk.StringVar()
         self.message=tk.StringVar()
+        self.error_message = tk.StringVar()
 
         welcome_label= ttk.Label(
             self,
@@ -85,6 +88,13 @@ class Game(ttk.Frame):
             rely=0.15,
         )
 
+        self.error_label = ttk.Label(
+            self,
+            style="self.error_label.TLabel",
+            textvariable=self.error_message,
+        )
+        self.error_label.place(relx=0.5, rely=0.05, anchor="center")
+
         submit_button = ColorChangingButton(self,
             text='Submit',
             fg='White',
@@ -93,21 +103,22 @@ class Game(ttk.Frame):
             command=self.submit
             )
         submit_button.place(rely=0.96, relx=0.5, anchor="center")
-
         reset_button = ColorChangingButton(self,
             text='Reset',
+            borderwidth=0,
             fg='White',
             bg='red',
             hover_bg='pale violet red',
             command=self.reset_game,
             )
-        reset_button.place(rely=0.1, relx=0.1)
+        reset_button.place(rely=0.01, relx=0.01)
 
         self.characters = tk.StringVar()
         charlbl=ttk.Label(self, textvariable=self.characters)
         charlbl.place(rely=0.75,relx=0.5, anchor="center")
 
         self.reset_game()
+
 
     def reset_game(self):
         self.chances=0
@@ -118,11 +129,15 @@ class Game(ttk.Frame):
         self.get_word()
         self.put_char(self.underscore_list)
         self.put_image(photos[0])
+        self.error_message.set("")
 
     def get_word(self):
-        self.word = random.choice(self.lst)
-        print(self.word)
-        print(self.underscore_list)
+        self.word=random.choice(self.lst)
+        while len(self.word)<4:
+            self.word = random.choice(self.lst)
+        #For coder
+        #print(self.word)
+        #print(self.underscore_list)
         for char in self.word:
             self.underscore_list.append("_")
 
@@ -135,25 +150,30 @@ class Game(ttk.Frame):
         self.img_label.config(image=photo)
         self.img_label.image = photo
 
-    def submit(self):
+    def submit(self, *args):
         entered = self.entered_val.get()
         # todo: Add check if user entered non-character or more than 1 character
-        if entered in self.word and entered not in self.underscore_list:
-            for i, char in enumerate(self.word):
-                if char == entered:
-                    self.underscore_list[i]=entered
-                    self.put_char(self.underscore_list)
-                    print(self.underscore_list)
+        if len(entered)!=1 or not entered.isalpha():
+            self.error_message.set("Use 1 Letter!")
+            self.error_label.after(3000, lambda: self.error_message.set(""))
+
         else:
-            self.chances+=1
-            self.put_image(photos[self.chances])
+            if entered in self.word and entered not in self.underscore_list:
+                for i, char in enumerate(self.word):
+                    if char == entered:
+                        self.underscore_list[i]=entered
+                        self.put_char(self.underscore_list)
+                        print(self.underscore_list)
+            else:
+                self.chances+=1
+                self.put_image(photos[self.chances])
 
-            if self.chances==7:
-                self.game_lost = True
-                self.message.set("You suck!")
-                self.put_char(list(self.word))
+                if self.chances==7:
+                    self.game_lost = True
+                    self.message.set("You suck :(")
+                    self.put_char(list(self.word))
 
-        if "_" not in self.underscore_list:
-            self.message.set("Siu")
+            if "_" not in self.underscore_list:
+                self.message.set("Good job!")
 
         self.e1.delete(0, tk.END)

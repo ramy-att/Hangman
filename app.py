@@ -35,6 +35,8 @@ class Hangman(tk.Tk):
 
     def show_frame(self,containter):
         frame= self.frames[containter]
+        if frame==self.frames[Game]:
+            self.bind('<Return>',frame.submit)
         frame.tkraise()
 
 def main():
@@ -45,6 +47,10 @@ def main():
     font.nametofont("TkDefaultFont").configure(
         family= "Comic Sans MS",
         size=12
+    )
+    style.configure(
+        "self.error_label.TLabel",
+        foreground='red',
     )
     app.mainloop()
 
