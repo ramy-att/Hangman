@@ -1,3 +1,4 @@
+#imports
 import tkinter as tk
 from tkinter import Toplevel
 from tkinter import ttk
@@ -72,8 +73,16 @@ class Game(ttk.Frame):
         self.entered_val = tk.StringVar()
         self.message=tk.StringVar()
         self.error_message = tk.StringVar()
+        self.wrong = tk.StringVar()
+        self.wrong.set("")
+        error_label= ttk.Label(
+            self,
+            textvariable=self.wrong
+        )
+        error_label.place(relx=0.8, rely=0.5, anchor="center")
 
-        welcome_label= ttk.Label(
+
+        welcome_label = ttk.Label(
             self,
             textvariable=self.message
         )
@@ -130,6 +139,7 @@ class Game(ttk.Frame):
         self.put_char(self.underscore_list)
         self.put_image(photos[0])
         self.error_message.set("")
+        self.wrong.set("")
 
     def get_word(self):
         self.word=random.choice(self.lst)
@@ -165,13 +175,18 @@ class Game(ttk.Frame):
                         self.put_char(self.underscore_list)
                         print(self.underscore_list)
             else:
+                self.wrong.set(self.wrong.get()+entered+"\n")
                 self.chances+=1
-                self.put_image(photos[self.chances])
+                try:
+                    self.put_image(photos[self.chances])
+                except IndexError:
+                    self.reset_game()
 
                 if self.chances==7:
                     self.game_lost = True
                     self.message.set("You suck :(")
                     self.put_char(list(self.word))
+
 
             if "_" not in self.underscore_list:
                 self.message.set("Good job!")
